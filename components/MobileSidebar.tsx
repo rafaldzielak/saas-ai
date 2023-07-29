@@ -5,8 +5,13 @@ import { Button } from "./ui/button";
 import { MenuIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Sidebar from "./Sidebar";
+import useIsMounted from "@/hooks/useIsMounted";
 
 const MobileSidebar = () => {
+  const isMounted = useIsMounted();
+
+  if (!isMounted) return null;
+
   return (
     <Sheet>
       <SheetTrigger>
