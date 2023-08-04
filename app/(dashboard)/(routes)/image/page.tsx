@@ -16,10 +16,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ImageFormSchema, amountOptions, imageFormSchema, resolutionOptions } from "./constants";
+import { useProModal } from "@/hooks/useProModal";
 
 const ImagePage = () => {
   const [images, setImages] = useState<string[]>([]);
   const router = useRouter();
+  const { onOpen } = useProModal();
 
   const form = useForm<ImageFormSchema>({
     resolver: zodResolver(imageFormSchema),
@@ -39,8 +41,8 @@ const ImagePage = () => {
       const urls = response.data.map((image: { url: string }) => image.url);
       setImages(urls);
       form.reset();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) onOpen();
     } finally {
       router.refresh();
     }

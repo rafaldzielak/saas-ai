@@ -13,10 +13,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Empty from "@/components/Empty";
 import Loader from "@/components/Loader";
+import { useProModal } from "@/hooks/useProModal";
 
 const MusicPage = () => {
   const router = useRouter();
   const [music, setMusic] = useState<string>();
+  const { onOpen } = useProModal();
 
   const form = useForm<MusicFormSchema>({
     resolver: zodResolver(musicFormSchema),
@@ -33,8 +35,8 @@ const MusicPage = () => {
       const response = await axios.post("/api/music", values);
       setMusic(response.data.audio);
       form.reset();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) onOpen();
     } finally {
       router.refresh();
     }

@@ -18,10 +18,12 @@ import { cn } from "@/lib/utils";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
 import ReactMarkdown from "react-markdown";
+import { useProModal } from "@/hooks/useProModal";
 
 const CodePage = () => {
   const router = useRouter();
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
+  const { onOpen } = useProModal();
 
   const form = useForm<ConversationFormSchema>({
     resolver: zodResolver(conversationFormSchema),
@@ -39,8 +41,8 @@ const CodePage = () => {
       const response = await axios.post("/api/code", { messages: newMessages });
       setMessages((current) => [...current, userMessage, response.data]);
       form.reset();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) onOpen();
     } finally {
       router.refresh();
     }
