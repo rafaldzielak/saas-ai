@@ -1,12 +1,15 @@
+"use client";
+
 import { useProModal } from "@/hooks/useProModal";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Check, Code, ImageIcon, MessageSquare, Music, VideoIcon, Zap } from "lucide-react";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Badge } from "./ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader } from "./ui/dialog";
 import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
+import axios from "axios";
 
 const tools = [
   { label: "Conversation", icon: MessageSquare, color: "text-violet-500", bgColor: "bg-violet-500/10" },
@@ -18,10 +21,23 @@ const tools = [
 
 const ProModal: FC = () => {
   const { isOpen, onClose, onOpen } = useProModal();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubscribe = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("/api/stripe");
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent>
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className='flex justify-center items-center flex-col gap-y-4 pb-2'>
             <div className='flex items-center gap-x-2 font-bold py-1'>
@@ -46,7 +62,7 @@ const ProModal: FC = () => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button size='lg' variant='premium' className='w-full'>
+          <Button size='lg' variant='premium' className='w-full' onClick={onSubscribe}>
             Upgrade <Zap className='w-4 g-4 ml-2 fill-white' />
           </Button>
         </DialogFooter>
