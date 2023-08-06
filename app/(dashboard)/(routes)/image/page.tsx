@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ImageFormSchema, amountOptions, imageFormSchema, resolutionOptions } from "./constants";
 import { useProModal } from "@/hooks/useProModal";
+import { toast } from "react-hot-toast";
 
 const ImagePage = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -43,6 +44,7 @@ const ImagePage = () => {
       form.reset();
     } catch (error: any) {
       if (error?.response?.status === 403) onOpen();
+      else toast.error("Something went wrong");
     } finally {
       router.refresh();
     }
