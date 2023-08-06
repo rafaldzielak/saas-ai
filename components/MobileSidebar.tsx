@@ -9,9 +9,10 @@ import useIsMounted from "@/hooks/useIsMounted";
 
 interface MobileSidebarProps {
   apiLimitCount: number;
+  isPro: boolean;
 }
 
-const MobileSidebar: FC<MobileSidebarProps> = ({ apiLimitCount }) => {
+const MobileSidebar: FC<MobileSidebarProps> = ({ apiLimitCount, isPro }) => {
   const isMounted = useIsMounted();
 
   if (!isMounted) return null;
@@ -24,7 +25,7 @@ const MobileSidebar: FC<MobileSidebarProps> = ({ apiLimitCount }) => {
         </Button>
       </SheetTrigger>
       <SheetContent side='left' className='p-0'>
-        <Sidebar apiLimitCount={apiLimitCount} />
+        <Sidebar apiLimitCount={apiLimitCount} isPro={isPro} />
       </SheetContent>
     </Sheet>
   );
